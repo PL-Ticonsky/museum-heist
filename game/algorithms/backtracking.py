@@ -12,7 +12,7 @@ def find_escape_route(state):
     route = []
     visited = []
 
-    if find_route_from(
+    route = find_route_from(
         start["row"],
         start["col"],
         goal["row"],
@@ -22,7 +22,9 @@ def find_escape_route(state):
         blocked,
         visited,
         route,
-    ):
+    )
+
+    if route is not None:
         return route
 
     return []
@@ -57,30 +59,57 @@ def is_valid_cell(row, col, rows, cols, blocked, visited):
     return True
 
 
-def find_route_from(row, col, goal_row, goal_col, rows, cols, blocked, visited, route):
-    if not is_valid_cell(row, col, rows, cols, blocked, visited):
-        return False
+def manhattan_distance(row, col, goal_row, goal_col):
+    return abs(row - goal_row) + abs(col - goal_col)
 
-    # Choose this cell.
-    visited.append((row, col))
-    route.append({"row": row, "col": col})
 
-    if row == goal_row and col == goal_col:
-        return True
-
+def get_ordered_moves(row, col, goal_row, goal_col, rows, cols, blocked, visited):
     moves = [
         (-1, 0),
         (1, 0),
         (0, -1),
         (0, 1),
     ]
+    valid_moves = []
+
+    for move in moves:
+        next_row = row + move[0]
+        next_col = col + move[1]
+
+        if is_valid_cell(next_row, next_col, rows, cols, blocked, visited):
+            valid_moves.append(move)
+
+    valid_moves.sort(
+        key=lambda move: manhattan_distance(
+            row + move[0],
+            col + move[1],
+            goal_row,
+            goal_col,
+        )
+    )
+
+    return valid_moves
+
+
+def find_route_from(row, col, goal_row, goal_col, rows, cols, blocked, visited, route):
+    if not is_valid_cell(row, col, rows, cols, blocked, visited):
+        return None
+
+    # Choose this cell.
+    visited.append((row, col))
+    route.append({"row": row, "col": col})
+
+    if row == goal_row and col == goal_col:
+        return route.copy()
+
+    moves = get_ordered_moves(row, col, goal_row, goal_col, rows, cols, blocked, visited)
 
     for move in moves:
         next_row = row + move[0]
         next_col = col + move[1]
 
         # Explore the next possible cell.
-        if find_route_from(
+        result = find_route_from(
             next_row,
             next_col,
             goal_row,
@@ -90,10 +119,12 @@ def find_route_from(row, col, goal_row, goal_col, rows, cols, blocked, visited, 
             blocked,
             visited,
             route,
-        ):
-            return True
+        )
+
+        if result is not None:
+            return result
 
     # Unchoose this cell.
     visited.pop()
     route.pop()
-    return False
+    return None
