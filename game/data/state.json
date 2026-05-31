@@ -1,7 +1,7 @@
 {
   "input_found": true,
   "grid": {"rows": 8, "cols": 8},
-  "player": {"row": 0, "col": 0},
+  "player": {"row": 3, "col": 1},
   "exit": {"row": 7, "col": 7},
   "walls": [
     {"row": 1, "col": 3},
@@ -19,6 +19,6 @@
     {"id": "vase", "row": 5, "col": 1, "value": 60},
     {"id": "coin", "row": 6, "col": 6, "value": 25}
   ],
-  "movement_history": [{"step":0,"row":0,"col":0}],
+  "movement_history": [{"step":0,"row":0,"col":0},{"step":3,"row":3,"col":1}],
   "items_sorted_by_value": [{"id":"coin","row":6,"col":6,"value":25},{"id":"vase","row":5,"col":1,"value":60},{"id":"painting","row":2,"col":5,"value":100}]
 }

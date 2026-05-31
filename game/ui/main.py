@@ -14,7 +14,7 @@ from algorithms.greedy import choose_greedy_item
 
 
 CELL_SIZE = 64
-HUD_HEIGHT = 168
+HUD_HEIGHT = 192
 
 BACKGROUND_COLOR = (245, 242, 235)
 HUD_COLOR = (230, 224, 212)
@@ -111,6 +111,7 @@ def draw_hud(screen, font, state, greedy_result, escape_route):
         f"Movements: {movement_count}",
         greedy_text,
         f"Route length: {len(escape_route)}",
+        "Use arrows or WASD to move",
     ]
 
     for index, text in enumerate(lines):
@@ -139,6 +140,24 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                direction = None
+
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    direction = "up"
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    direction = "down"
+                elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    direction = "left"
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    direction = "right"
+
+                if direction is not None:
+                    bridge.write_input("move", direction, state)
+                    bridge.run_engine()
+                    state = bridge.load_state()
+                    greedy_result = choose_greedy_item(state)
+                    escape_route = find_escape_route(state)
 
         screen.fill(BACKGROUND_COLOR)
         draw_hud(screen, font, state, greedy_result, escape_route)
