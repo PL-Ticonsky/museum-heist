@@ -1,0 +1,18 @@
+{
+  "action": "reset",
+  "direction": "",
+  "difficulty": "Hard",
+  "player": {
+    "row": 0,
+    "col": 0
+  },
+  "movement_step": 0,
+  "movement_history": [],
+  "collected_items": [],
+  "score": 0,
+  "escaped": false,
+  "game_over": false,
+  "game_over_reason": "",
+  "alarm": 0,
+  "elapsed_seconds": 0
+}

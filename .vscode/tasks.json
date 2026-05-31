@@ -18,6 +18,8 @@
       "args": [
         "-std=c++17",
         "${workspaceFolder}/engine/main.cpp",
+        "${workspaceFolder}/engine/linked_list.cpp",
+        "${workspaceFolder}/engine/tree.cpp",
         "-o",
         "${workspaceFolder}/engine/museum_engine"
       ],
