@@ -1,0 +1,18 @@
+* 5dd33a0 (HEAD -> docs/full-technical-documentation, origin/docs/full-technical-documentation) docs: add technical documentation structure
+*   bbb11eb (origin/main, origin/HEAD, main) merge: integrate final Museum Heist gameplay
+|\  
+| * d584e61 (origin/feature/main-menu-return, origin/backup/final-before-main-merge, feature/main-menu-return, backup/final-before-main-merge) update input.json / state.json
+| * 53d1dab ui: add return to main menu option
+| * 020ec77 (origin/feature/tutorial-timer-final-metrics, feature/tutorial-timer-final-metrics) ui: add tutorial timer and final metrics
+| * 22da9b4 (origin/feature/vision-system, feature/vision-system, feature/ui-ux-polish, feature/difficulty-levels) gameplay: add camera and guard vision zones
+| * 8d52f1f (origin/feature/stealth-risk-system, feature/stealth-risk-system) gameplay: add stealth alarm and losing conditions
+| * e7bb8c1 (origin/feature/game-state, feature/game-state, feature/game-finish-flow) gameplay: persist movement history and item collection
+| * 42854ea (origin/feature/algorithms, feature/algorithms) gameplay: add keyboard player movement
+| * f625c33 algorithms: refine backtracking escape route output
+| * a3c949e algorithms: add greedy item choice and backtracking route
+| * f3bb8e8 (origin/feature/engine-cpp, feature/engine-cpp) bridge: connect pygame UI with C++ engine state
+| * 06a9f8c engine: add minimal C++ state generator
+|/  
+* 46647f2 chore: configure Python C++ workspace
+* 6249c02 chore: configure Python and VS Code environment
+* 47c0c27 chore: initialize Museum Heist project structure
