@@ -31,11 +31,14 @@ def load_state():
         return json.load(file)
 
 
-def write_input(action, direction, state):
+def write_input(action, direction, state, elapsed_seconds=None):
     player = state["player"]
     movement_step = len(state["movement_history"])
     escaped = state.get("escaped", False)
     game_over = state.get("game_over", False)
+    difficulty = state.get("difficulty", "Normal")
+    if elapsed_seconds is None:
+        elapsed_seconds = state.get("elapsed_seconds", 0)
 
     if action == "move" and (escaped or game_over):
         action = "none"
@@ -44,6 +47,7 @@ def write_input(action, direction, state):
     input_data = {
         "action": action,
         "direction": direction,
+        "difficulty": difficulty,
         "player": {
             "row": player["row"],
             "col": player["col"],
@@ -56,16 +60,18 @@ def write_input(action, direction, state):
         "game_over": game_over,
         "game_over_reason": state.get("game_over_reason", ""),
         "alarm": state.get("alarm", 0),
+        "elapsed_seconds": elapsed_seconds,
     }
 
     with INPUT_PATH.open("w", encoding="utf-8") as file:
         json.dump(input_data, file, indent=2)
 
 
-def write_reset_input():
+def write_reset_input(difficulty="Normal"):
     input_data = {
         "action": "reset",
         "direction": "",
+        "difficulty": difficulty,
         "player": {
             "row": 0,
             "col": 0,
@@ -78,6 +84,7 @@ def write_reset_input():
         "game_over": False,
         "game_over_reason": "",
         "alarm": 0,
+        "elapsed_seconds": 0,
     }
 
     with INPUT_PATH.open("w", encoding="utf-8") as file:

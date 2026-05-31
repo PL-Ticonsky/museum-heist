@@ -1,69 +1,24 @@
 {
-  "action": "move",
-  "direction": "down",
+  "action": "tick",
+  "direction": "",
+  "difficulty": "Normal",
   "player": {
-    "row": 6,
-    "col": 1
+    "row": 0,
+    "col": 0
   },
-  "movement_step": 10,
+  "movement_step": 1,
   "movement_history": [
     {
       "step": 0,
       "row": 0,
       "col": 0
-    },
-    {
-      "step": 1,
-      "row": 0,
-      "col": 1
-    },
-    {
-      "step": 2,
-      "row": 1,
-      "col": 1
-    },
-    {
-      "step": 3,
-      "row": 1,
-      "col": 0
-    },
-    {
-      "step": 4,
-      "row": 2,
-      "col": 0
-    },
-    {
-      "step": 5,
-      "row": 2,
-      "col": 1
-    },
-    {
-      "step": 6,
-      "row": 3,
-      "col": 1
-    },
-    {
-      "step": 7,
-      "row": 4,
-      "col": 1
-    },
-    {
-      "step": 8,
-      "row": 5,
-      "col": 1
-    },
-    {
-      "step": 9,
-      "row": 6,
-      "col": 1
     }
   ],
-  "collected_items": [
-    "vase"
-  ],
-  "score": 60,
+  "collected_items": [],
+  "score": 0,
   "escaped": false,
   "game_over": false,
   "game_over_reason": "",
-  "alarm": 0
+  "alarm": 0,
+  "elapsed_seconds": 5
 }
