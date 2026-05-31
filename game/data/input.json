@@ -1,14 +1,67 @@
 {
-  "action": "reset",
-  "direction": "",
+  "action": "move",
+  "direction": "down",
   "player": {
-    "row": 0,
-    "col": 0
+    "row": 6,
+    "col": 1
   },
-  "movement_step": 0,
-  "movement_history": [],
-  "collected_items": [],
-  "score": 0,
+  "movement_step": 10,
+  "movement_history": [
+    {
+      "step": 0,
+      "row": 0,
+      "col": 0
+    },
+    {
+      "step": 1,
+      "row": 0,
+      "col": 1
+    },
+    {
+      "step": 2,
+      "row": 1,
+      "col": 1
+    },
+    {
+      "step": 3,
+      "row": 1,
+      "col": 0
+    },
+    {
+      "step": 4,
+      "row": 2,
+      "col": 0
+    },
+    {
+      "step": 5,
+      "row": 2,
+      "col": 1
+    },
+    {
+      "step": 6,
+      "row": 3,
+      "col": 1
+    },
+    {
+      "step": 7,
+      "row": 4,
+      "col": 1
+    },
+    {
+      "step": 8,
+      "row": 5,
+      "col": 1
+    },
+    {
+      "step": 9,
+      "row": 6,
+      "col": 1
+    }
+  ],
+  "collected_items": [
+    "vase"
+  ],
+  "score": 60,
   "escaped": false,
   "game_over": false,
   "game_over_reason": "",

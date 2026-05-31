@@ -16,6 +16,10 @@ shows the final score, collected item count, movement count, and route length.
 
 - Trying to move into a wall keeps the player in place and raises the alarm by 1.
 - Moving into a camera or guard cell causes game over immediately.
+- Cameras see in one direction for a limited range.
+- Guards see up, down, left, and right for a limited range.
+- Walls block camera and guard vision.
+- Entering a camera or guard vision zone causes game over immediately.
 - Ending a move next to a guard raises the alarm by 1.
 - Collecting an item near a guard raises the alarm by 1.
 - If the alarm reaches 3, the player is caught.

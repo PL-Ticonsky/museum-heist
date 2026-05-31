@@ -20,6 +20,7 @@ BACKGROUND_COLOR = (245, 242, 235)
 HUD_COLOR = (230, 224, 212)
 GRID_COLOR = (45, 45, 45)
 ROUTE_COLOR = (60, 150, 170)
+VISION_COLOR = (245, 165, 80)
 PLAYER_COLOR = (40, 110, 210)
 EXIT_COLOR = (40, 150, 80)
 WALL_COLOR = (70, 70, 70)
@@ -57,6 +58,11 @@ def draw_route(screen, escape_route):
         center_x = position["col"] * CELL_SIZE + CELL_SIZE // 2
         center_y = HUD_HEIGHT + position["row"] * CELL_SIZE + CELL_SIZE // 2
         pygame.draw.circle(screen, ROUTE_COLOR, (center_x, center_y), 7)
+
+
+def draw_vision_zones(screen, state):
+    for zone in state.get("vision_zones", []):
+        draw_cell(screen, zone["row"], zone["col"], VISION_COLOR, 6)
 
 
 def draw_objects(screen, state, selected_item):
@@ -189,6 +195,7 @@ def main():
         screen.fill(BACKGROUND_COLOR)
         draw_hud(screen, font, state, greedy_result, escape_route)
         draw_grid(screen, rows, cols)
+        draw_vision_zones(screen, state)
         if state.get("status", "Playing") == "Playing":
             draw_route(screen, escape_route)
         draw_objects(screen, state, greedy_result["item"])

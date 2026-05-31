@@ -1,7 +1,7 @@
 {
   "input_found": true,
   "grid": {"rows": 8, "cols": 8},
-  "player": {"row": 0, "col": 0},
+  "player": {"row": 7, "col": 1},
   "exit": {"row": 7, "col": 7},
   "escaped": false,
   "game_over": false,
@@ -10,25 +10,37 @@
   "max_alarm": 3,
   "max_movements": 35,
   "status": "Playing",
-  "score": 0,
+  "score": 60,
   "all_items_count": 3,
-  "collected_items": [],
+  "collected_items": ["vase"],
   "walls": [
     {"row": 1, "col": 3},
     {"row": 2, "col": 3},
     {"row": 3, "col": 3}
   ],
   "cameras": [
-    {"id": "camera_1", "row": 0, "col": 6}
+    {"id": "camera_1", "row": 0, "col": 6, "direction": "down", "range": 3}
   ],
   "guards": [
-    {"id": "guard_1", "row": 4, "col": 4}
+    {"id": "guard_1", "row": 4, "col": 4, "vision_range": 2}
   ],
+  "vision_zones": [
+    {"source": "camera_1", "type": "camera", "row": 1, "col": 6},
+    {"source": "camera_1", "type": "camera", "row": 2, "col": 6},
+    {"source": "camera_1", "type": "camera", "row": 3, "col": 6},
+    {"source": "guard_1", "type": "guard", "row": 3, "col": 4},
+    {"source": "guard_1", "type": "guard", "row": 2, "col": 4},
+    {"source": "guard_1", "type": "guard", "row": 5, "col": 4},
+    {"source": "guard_1", "type": "guard", "row": 6, "col": 4},
+    {"source": "guard_1", "type": "guard", "row": 4, "col": 3},
+    {"source": "guard_1", "type": "guard", "row": 4, "col": 2},
+    {"source": "guard_1", "type": "guard", "row": 4, "col": 5},
+    {"source": "guard_1", "type": "guard", "row": 4, "col": 6}
+],
   "items": [
     {"id": "painting", "row": 2, "col": 5, "value": 100},
-    {"id": "vase", "row": 5, "col": 1, "value": 60},
     {"id": "coin", "row": 6, "col": 6, "value": 25}
   ],
-  "movement_history": [{"step":0,"row":0,"col":0}],
-  "items_sorted_by_value": [{"id":"coin","row":6,"col":6,"value":25},{"id":"vase","row":5,"col":1,"value":60},{"id":"painting","row":2,"col":5,"value":100}]
+  "movement_history": [{"step":0,"row":0,"col":0},{"step":1,"row":0,"col":1},{"step":2,"row":1,"col":1},{"step":3,"row":1,"col":0},{"step":4,"row":2,"col":0},{"step":5,"row":2,"col":1},{"step":6,"row":3,"col":1},{"step":7,"row":4,"col":1},{"step":8,"row":5,"col":1},{"step":9,"row":6,"col":1},{"step":10,"row":7,"col":1}],
+  "items_sorted_by_value": [{"id":"coin","row":6,"col":6,"value":25},{"id":"painting","row":2,"col":5,"value":100}]
 }

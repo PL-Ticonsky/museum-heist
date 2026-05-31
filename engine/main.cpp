@@ -18,11 +18,29 @@ struct ItemData {
     int value;
 };
 
+struct CameraData {
+    std::string id;
+    int row;
+    int col;
+    std::string direction;
+    int range;
+};
+
+struct GuardData {
+    std::string id;
+    int row;
+    int col;
+    int vision_range;
+};
+
 ItemData game_items[ITEM_COUNT] = {
     {"painting", 2, 5, 100},
     {"vase", 5, 1, 60},
     {"coin", 6, 6, 25},
 };
+
+CameraData camera_1 = {"camera_1", 0, 6, "down", 3};
+GuardData guard_1 = {"guard_1", 4, 4, 2};
 
 bool file_exists(const std::string& path) {
     std::ifstream file(path);
@@ -262,7 +280,7 @@ bool is_wall_cell(int row, int col) {
 }
 
 bool is_camera_cell(int row, int col) {
-    if (row == 0 && col == 6) {
+    if (row == camera_1.row && col == camera_1.col) {
         return true;
     }
 
@@ -270,7 +288,7 @@ bool is_camera_cell(int row, int col) {
 }
 
 bool is_guard_cell(int row, int col) {
-    if (row == 4 && col == 4) {
+    if (row == guard_1.row && col == guard_1.col) {
         return true;
     }
 
@@ -278,11 +296,102 @@ bool is_guard_cell(int row, int col) {
 }
 
 bool is_next_to_guard(int row, int col) {
-    return manhattan_distance(row, col, 4, 4) == 1;
+    return manhattan_distance(row, col, guard_1.row, guard_1.col) == 1;
 }
 
 bool item_is_near_guard(const ItemData& item) {
-    return manhattan_distance(item.row, item.col, 4, 4) <= 2;
+    return manhattan_distance(item.row, item.col, guard_1.row, guard_1.col) <= 2;
+}
+
+void get_direction_change(const std::string& direction, int& row_change, int& col_change) {
+    row_change = 0;
+    col_change = 0;
+
+    if (direction == "up") {
+        row_change = -1;
+    } else if (direction == "down") {
+        row_change = 1;
+    } else if (direction == "left") {
+        col_change = -1;
+    } else if (direction == "right") {
+        col_change = 1;
+    }
+}
+
+bool camera_sees_cell(int row, int col) {
+    if (is_camera_cell(row, col)) {
+        return true;
+    }
+
+    int row_change;
+    int col_change;
+    get_direction_change(camera_1.direction, row_change, col_change);
+
+    int vision_row = camera_1.row;
+    int vision_col = camera_1.col;
+
+    for (int step = 1; step <= camera_1.range; step++) {
+        vision_row += row_change;
+        vision_col += col_change;
+
+        if (vision_row < 0 || vision_row >= GRID_ROWS || vision_col < 0 || vision_col >= GRID_COLS) {
+            return false;
+        }
+
+        if (is_wall_cell(vision_row, vision_col)) {
+            return false;
+        }
+
+        if (vision_row == row && vision_col == col) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool guard_sees_cell(int row, int col) {
+    if (is_guard_cell(row, col)) {
+        return true;
+    }
+
+    std::string directions[4] = {"up", "down", "left", "right"};
+
+    for (int direction_index = 0; direction_index < 4; direction_index++) {
+        int row_change;
+        int col_change;
+        get_direction_change(directions[direction_index], row_change, col_change);
+
+        int vision_row = guard_1.row;
+        int vision_col = guard_1.col;
+
+        for (int step = 1; step <= guard_1.vision_range; step++) {
+            vision_row += row_change;
+            vision_col += col_change;
+
+            if (vision_row < 0 || vision_row >= GRID_ROWS || vision_col < 0 || vision_col >= GRID_COLS) {
+                break;
+            }
+
+            if (is_wall_cell(vision_row, vision_col)) {
+                break;
+            }
+
+            if (vision_row == row && vision_col == col) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool is_vision_cell(int row, int col) {
+    if (is_wall_cell(row, col)) {
+        return false;
+    }
+
+    return camera_sees_cell(row, col) || guard_sees_cell(row, col);
 }
 
 bool is_valid_move(int row, int col) {
@@ -294,7 +403,7 @@ bool is_valid_move(int row, int col) {
         return false;
     }
 
-    if (is_wall_cell(row, col) || is_camera_cell(row, col) || is_guard_cell(row, col)) {
+    if (is_wall_cell(row, col) || is_camera_cell(row, col) || is_guard_cell(row, col) || is_vision_cell(row, col)) {
         return false;
     }
 
@@ -418,13 +527,19 @@ void apply_input(
 
     if (is_camera_cell(next_row, next_col)) {
         game_over = true;
-        game_over_reason = "A camera spotted the player.";
+        game_over_reason = "Caught in vision zone";
         return;
     }
 
     if (is_guard_cell(next_row, next_col)) {
         game_over = true;
-        game_over_reason = "A guard caught the player.";
+        game_over_reason = "Caught in vision zone";
+        return;
+    }
+
+    if (is_vision_cell(next_row, next_col)) {
+        game_over = true;
+        game_over_reason = "Caught in vision zone";
         return;
     }
 
@@ -461,6 +576,92 @@ void write_collected_items(std::ostream& out, const std::string collected_items[
         if (index < collected_count - 1) {
             out << ", ";
         }
+    }
+
+    out << "]";
+}
+
+void write_vision_cell(
+    std::ostream& out,
+    bool& first_cell,
+    const std::string& source,
+    const std::string& type,
+    int row,
+    int col
+) {
+    if (!first_cell) {
+        out << ",";
+    }
+
+    out << "\n";
+    out << "    {\"source\": \"" << source
+        << "\", \"type\": \"" << type
+        << "\", \"row\": " << row
+        << ", \"col\": " << col << "}";
+    first_cell = false;
+}
+
+void write_camera_vision(std::ostream& out, bool& first_cell) {
+    int row_change;
+    int col_change;
+    get_direction_change(camera_1.direction, row_change, col_change);
+
+    int vision_row = camera_1.row;
+    int vision_col = camera_1.col;
+
+    for (int step = 1; step <= camera_1.range; step++) {
+        vision_row += row_change;
+        vision_col += col_change;
+
+        if (vision_row < 0 || vision_row >= GRID_ROWS || vision_col < 0 || vision_col >= GRID_COLS) {
+            return;
+        }
+
+        if (is_wall_cell(vision_row, vision_col)) {
+            return;
+        }
+
+        write_vision_cell(out, first_cell, camera_1.id, "camera", vision_row, vision_col);
+    }
+}
+
+void write_guard_vision(std::ostream& out, bool& first_cell) {
+    std::string directions[4] = {"up", "down", "left", "right"};
+
+    for (int direction_index = 0; direction_index < 4; direction_index++) {
+        int row_change;
+        int col_change;
+        get_direction_change(directions[direction_index], row_change, col_change);
+
+        int vision_row = guard_1.row;
+        int vision_col = guard_1.col;
+
+        for (int step = 1; step <= guard_1.vision_range; step++) {
+            vision_row += row_change;
+            vision_col += col_change;
+
+            if (vision_row < 0 || vision_row >= GRID_ROWS || vision_col < 0 || vision_col >= GRID_COLS) {
+                break;
+            }
+
+            if (is_wall_cell(vision_row, vision_col)) {
+                break;
+            }
+
+            write_vision_cell(out, first_cell, guard_1.id, "guard", vision_row, vision_col);
+        }
+    }
+}
+
+void write_vision_zones(std::ostream& out) {
+    bool first_cell = true;
+
+    out << "[";
+    write_camera_vision(out, first_cell);
+    write_guard_vision(out, first_cell);
+
+    if (!first_cell) {
+        out << "\n";
     }
 
     out << "]";
@@ -524,11 +725,21 @@ void write_state_file(
     out << "    {\"row\": 3, \"col\": 3}\n";
     out << "  ],\n";
     out << "  \"cameras\": [\n";
-    out << "    {\"id\": \"camera_1\", \"row\": 0, \"col\": 6}\n";
+    out << "    {\"id\": \"" << camera_1.id
+        << "\", \"row\": " << camera_1.row
+        << ", \"col\": " << camera_1.col
+        << ", \"direction\": \"" << camera_1.direction
+        << "\", \"range\": " << camera_1.range << "}\n";
     out << "  ],\n";
     out << "  \"guards\": [\n";
-    out << "    {\"id\": \"guard_1\", \"row\": 4, \"col\": 4}\n";
+    out << "    {\"id\": \"" << guard_1.id
+        << "\", \"row\": " << guard_1.row
+        << ", \"col\": " << guard_1.col
+        << ", \"vision_range\": " << guard_1.vision_range << "}\n";
     out << "  ],\n";
+    out << "  \"vision_zones\": ";
+    write_vision_zones(out);
+    out << ",\n";
     out << "  \"items\": [";
 
     bool first_item = true;

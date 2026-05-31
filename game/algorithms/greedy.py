@@ -6,8 +6,9 @@ def manhattan_distance(a_row, a_col, b_row, b_col):
 
 
 def choose_greedy_item(state):
-    items = state["items"]
+    items = get_remaining_items(state)
     guards = state["guards"]
+    vision_zones = state.get("vision_zones", [])
 
     if len(items) == 0:
         return {
@@ -19,6 +20,7 @@ def choose_greedy_item(state):
 
     for item in items:
         item_is_near_guard = False
+        item_is_dangerous = is_in_vision_zone(item, vision_zones)
 
         for guard in guards:
             distance = manhattan_distance(
@@ -31,7 +33,7 @@ def choose_greedy_item(state):
             if distance <= NEAR_GUARD_DISTANCE:
                 item_is_near_guard = True
 
-        if item_is_near_guard:
+        if item_is_near_guard and not item_is_dangerous:
             if best_near_guard is None or item["value"] > best_near_guard["value"]:
                 best_near_guard = item
 
@@ -39,6 +41,19 @@ def choose_greedy_item(state):
         return {
             "item": best_near_guard,
             "reason": "Highest-value item near a guard.",
+        }
+
+    best_safe = None
+
+    for item in items:
+        if not is_in_vision_zone(item, vision_zones):
+            if best_safe is None or item["value"] > best_safe["value"]:
+                best_safe = item
+
+    if best_safe is not None:
+        return {
+            "item": best_safe,
+            "reason": "No safe item near a guard, so the highest-value safe item was chosen.",
         }
 
     best_overall = items[0]
@@ -49,5 +64,24 @@ def choose_greedy_item(state):
 
     return {
         "item": best_overall,
-        "reason": "No item is near a guard, so the highest-value item was chosen.",
+        "reason": "Warning: all remaining items are inside a vision zone.",
     }
+
+
+def get_remaining_items(state):
+    collected_items = state.get("collected_items", [])
+    remaining_items = []
+
+    for item in state["items"]:
+        if item["id"] not in collected_items:
+            remaining_items.append(item)
+
+    return remaining_items
+
+
+def is_in_vision_zone(item, vision_zones):
+    for zone in vision_zones:
+        if item["row"] == zone["row"] and item["col"] == zone["col"]:
+            return True
+
+    return False

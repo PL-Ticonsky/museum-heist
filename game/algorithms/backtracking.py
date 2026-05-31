@@ -8,6 +8,7 @@ def find_escape_route(state):
     add_positions(blocked, state["walls"])
     add_positions(blocked, state["cameras"])
     add_positions(blocked, state["guards"])
+    add_positions(blocked, state.get("vision_zones", []))
 
     route = []
     visited = []
