@@ -14,7 +14,7 @@ from algorithms.greedy import choose_greedy_item
 
 
 CELL_SIZE = 64
-HUD_HEIGHT = 192
+HUD_HEIGHT = 264
 
 BACKGROUND_COLOR = (245, 242, 235)
 HUD_COLOR = (230, 224, 212)
@@ -92,6 +92,9 @@ def draw_hud(screen, font, state, greedy_result, escape_route):
     player = state["player"]
     item_count = len(state["items"])
     movement_count = len(state["movement_history"])
+    score = state.get("score", 0)
+    collected_count = len(state.get("collected_items", []))
+    escaped = state.get("escaped", False)
     selected_item = greedy_result["item"]
 
     if selected_item is None:
@@ -107,12 +110,17 @@ def draw_hud(screen, font, state, greedy_result, escape_route):
     lines = [
         "Museum Heist",
         f"Player position: row {player['row']}, col {player['col']}",
-        f"Items: {item_count}",
+        f"Score: {score}",
+        f"Collected items: {collected_count} of {item_count}",
         f"Movements: {movement_count}",
+        f"Escaped: {escaped}",
         greedy_text,
         f"Route length: {len(escape_route)}",
         "Use arrows or WASD to move",
     ]
+
+    if escaped:
+        lines.append("Escape successful!")
 
     for index, text in enumerate(lines):
         label = font.render(text, True, TEXT_COLOR)

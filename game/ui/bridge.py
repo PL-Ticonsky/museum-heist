@@ -43,6 +43,9 @@ def write_input(action, direction, state):
             "col": player["col"],
         },
         "movement_step": movement_step,
+        "movement_history": state["movement_history"],
+        "collected_items": state.get("collected_items", []),
+        "score": state.get("score", 0),
     }
 
     with INPUT_PATH.open("w", encoding="utf-8") as file:
