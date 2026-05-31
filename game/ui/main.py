@@ -14,7 +14,7 @@ from algorithms.greedy import choose_greedy_item
 
 
 CELL_SIZE = 64
-HUD_HEIGHT = 264
+HUD_HEIGHT = 320
 
 BACKGROUND_COLOR = (245, 242, 235)
 HUD_COLOR = (230, 224, 212)
@@ -90,11 +90,15 @@ def draw_objects(screen, state, selected_item):
 
 def draw_hud(screen, font, state, greedy_result, escape_route):
     player = state["player"]
-    item_count = len(state["items"])
+    total_item_count = state.get("all_items_count", len(state["items"]))
     movement_count = len(state["movement_history"])
     score = state.get("score", 0)
     collected_count = len(state.get("collected_items", []))
     escaped = state.get("escaped", False)
+    game_over = state.get("game_over", False)
+    alarm = state.get("alarm", 0)
+    max_alarm = state.get("max_alarm", 3)
+    status = state.get("status", "Playing")
     selected_item = greedy_result["item"]
 
     if selected_item is None:
@@ -111,16 +115,23 @@ def draw_hud(screen, font, state, greedy_result, escape_route):
         "Museum Heist",
         f"Player position: row {player['row']}, col {player['col']}",
         f"Score: {score}",
-        f"Collected items: {collected_count} of {item_count}",
+        f"Collected items: {collected_count} / {total_item_count}",
         f"Movements: {movement_count}",
-        f"Escaped: {escaped}",
+        f"Alarm: {alarm} / {max_alarm}",
+        f"Status: {status}",
         greedy_text,
         f"Route length: {len(escape_route)}",
-        "Use arrows or WASD to move",
     ]
 
     if escaped:
         lines.append("Escape successful!")
+        lines.append("Press R to restart")
+    elif game_over:
+        lines.append("Game Over!")
+        lines.append(f"Reason: {state.get('game_over_reason', '')}")
+        lines.append("Press R to restart")
+    else:
+        lines.append("Use arrows or WASD to move. Press R to restart.")
 
     for index, text in enumerate(lines):
         label = font.render(text, True, TEXT_COLOR)
@@ -151,7 +162,15 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 direction = None
 
-                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                if event.key == pygame.K_r:
+                    bridge.write_reset_input()
+                    bridge.run_engine()
+                    state = bridge.load_state()
+                    greedy_result = choose_greedy_item(state)
+                    escape_route = find_escape_route(state)
+                elif state.get("escaped", False) or state.get("game_over", False):
+                    direction = None
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     direction = "up"
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     direction = "down"
@@ -170,7 +189,8 @@ def main():
         screen.fill(BACKGROUND_COLOR)
         draw_hud(screen, font, state, greedy_result, escape_route)
         draw_grid(screen, rows, cols)
-        draw_route(screen, escape_route)
+        if state.get("status", "Playing") == "Playing":
+            draw_route(screen, escape_route)
         draw_objects(screen, state, greedy_result["item"])
         pygame.display.flip()
         clock.tick(60)

@@ -8,6 +8,8 @@
 const int GRID_ROWS = 8;
 const int GRID_COLS = 8;
 const int ITEM_COUNT = 3;
+const int MAX_ALARM = 3;
+const int MAX_MOVEMENTS = 35;
 
 struct ItemData {
     std::string id;
@@ -112,6 +114,32 @@ int get_int_value_after(const std::string& text, const std::string& key, int sta
     return std::stoi(text.substr(number_start, number_end - number_start));
 }
 
+bool get_bool_value(const std::string& text, const std::string& key, bool default_value) {
+    std::string search_key = "\"" + key + "\"";
+    int key_position = text.find(search_key);
+
+    if (key_position == -1) {
+        return default_value;
+    }
+
+    int colon_position = text.find(":", key_position);
+    int value_start = colon_position + 1;
+
+    while (value_start < (int)text.length() && text[value_start] == ' ') {
+        value_start++;
+    }
+
+    if (text.substr(value_start, 4) == "true") {
+        return true;
+    }
+
+    if (text.substr(value_start, 5) == "false") {
+        return false;
+    }
+
+    return default_value;
+}
+
 void rebuild_movement_history(const std::string& input, MovementList& history) {
     int history_position = input.find("\"movement_history\"");
 
@@ -191,7 +219,33 @@ bool item_is_collected(const std::string collected_items[], int collected_count,
     return false;
 }
 
-bool is_blocked_cell(int row, int col) {
+void reset_game(int& player_row, int& player_col, int& step, MovementList& history, int& collected_count, int& score, bool& escaped) {
+    player_row = 0;
+    player_col = 0;
+    step = 0;
+    collected_count = 0;
+    score = 0;
+    escaped = false;
+    history.clear();
+    history.push_back(0, 0, 0);
+}
+
+int manhattan_distance(int a_row, int a_col, int b_row, int b_col) {
+    int row_distance = a_row - b_row;
+    int col_distance = a_col - b_col;
+
+    if (row_distance < 0) {
+        row_distance = -row_distance;
+    }
+
+    if (col_distance < 0) {
+        col_distance = -col_distance;
+    }
+
+    return row_distance + col_distance;
+}
+
+bool is_wall_cell(int row, int col) {
     if (row == 1 && col == 3) {
         return true;
     }
@@ -204,15 +258,31 @@ bool is_blocked_cell(int row, int col) {
         return true;
     }
 
+    return false;
+}
+
+bool is_camera_cell(int row, int col) {
     if (row == 0 && col == 6) {
         return true;
     }
 
+    return false;
+}
+
+bool is_guard_cell(int row, int col) {
     if (row == 4 && col == 4) {
         return true;
     }
 
     return false;
+}
+
+bool is_next_to_guard(int row, int col) {
+    return manhattan_distance(row, col, 4, 4) == 1;
+}
+
+bool item_is_near_guard(const ItemData& item) {
+    return manhattan_distance(item.row, item.col, 4, 4) <= 2;
 }
 
 bool is_valid_move(int row, int col) {
@@ -224,14 +294,28 @@ bool is_valid_move(int row, int col) {
         return false;
     }
 
-    if (is_blocked_cell(row, col)) {
+    if (is_wall_cell(row, col) || is_camera_cell(row, col) || is_guard_cell(row, col)) {
         return false;
     }
 
     return true;
 }
 
-void collect_item_if_needed(int player_row, int player_col, std::string collected_items[], int& collected_count, int& score) {
+void check_alarm_limit(int alarm, bool& game_over, std::string& game_over_reason) {
+    if (alarm >= MAX_ALARM && !game_over) {
+        game_over = true;
+        game_over_reason = "Alarm reached the maximum level.";
+    }
+}
+
+void collect_item_if_needed(
+    int player_row,
+    int player_col,
+    std::string collected_items[],
+    int& collected_count,
+    int& score,
+    int& alarm
+) {
     for (int index = 0; index < ITEM_COUNT; index++) {
         ItemData item = game_items[index];
 
@@ -240,6 +324,10 @@ void collect_item_if_needed(int player_row, int player_col, std::string collecte
                 collected_items[collected_count] = item.id;
                 collected_count++;
                 score += item.value;
+
+                if (item_is_near_guard(item)) {
+                    alarm++;
+                }
             }
         }
     }
@@ -253,7 +341,11 @@ void apply_input(
     MovementList& history,
     std::string collected_items[],
     int& collected_count,
-    int& score
+    int& score,
+    bool& escaped,
+    bool& game_over,
+    int& alarm,
+    std::string& game_over_reason
 ) {
     if (!file_exists(input_path)) {
         history.push_back(0, 0, 0);
@@ -264,16 +356,35 @@ void apply_input(
     rebuild_movement_history(input, history);
     read_collected_items(input, collected_items, collected_count);
     score = get_int_value(input, "score", 0);
+    escaped = get_bool_value(input, "escaped", false);
+    game_over = get_bool_value(input, "game_over", false);
+    alarm = get_int_value(input, "alarm", 0);
+    game_over_reason = get_string_value(input, "game_over_reason");
 
     std::string action = get_string_value(input, "action");
     std::string direction = get_string_value(input, "direction");
+
+    if (action == "reset") {
+        reset_game(player_row, player_col, step, history, collected_count, score, escaped);
+        game_over = false;
+        alarm = 0;
+        game_over_reason = "";
+        return;
+    }
+
+    player_row = get_int_value(input, "row", player_row);
+    player_col = get_int_value(input, "col", player_col);
+
+    if (escaped || game_over) {
+        return;
+    }
 
     if (action != "move") {
         return;
     }
 
-    int current_row = get_int_value(input, "row", player_row);
-    int current_col = get_int_value(input, "col", player_col);
+    int current_row = player_row;
+    int current_col = player_col;
     int current_step = get_int_value(input, "movement_step", step);
 
     int next_row = current_row;
@@ -293,11 +404,51 @@ void apply_input(
     player_col = current_col;
     step = current_step;
 
+    bool next_cell_is_inside = next_row >= 0 && next_row < GRID_ROWS && next_col >= 0 && next_col < GRID_COLS;
+
+    if (!next_cell_is_inside) {
+        return;
+    }
+
+    if (is_wall_cell(next_row, next_col)) {
+        alarm++;
+        check_alarm_limit(alarm, game_over, game_over_reason);
+        return;
+    }
+
+    if (is_camera_cell(next_row, next_col)) {
+        game_over = true;
+        game_over_reason = "A camera spotted the player.";
+        return;
+    }
+
+    if (is_guard_cell(next_row, next_col)) {
+        game_over = true;
+        game_over_reason = "A guard caught the player.";
+        return;
+    }
+
     if (is_valid_move(next_row, next_col)) {
         player_row = next_row;
         player_col = next_col;
         history.push_back(player_row, player_col, step);
-        collect_item_if_needed(player_row, player_col, collected_items, collected_count, score);
+
+        if (is_next_to_guard(player_row, player_col)) {
+            alarm++;
+        }
+
+        collect_item_if_needed(player_row, player_col, collected_items, collected_count, score, alarm);
+
+        if (player_row == 7 && player_col == 7) {
+            escaped = true;
+        }
+
+        check_alarm_limit(alarm, game_over, game_over_reason);
+
+        if (!escaped && !game_over && history.get_size() >= MAX_MOVEMENTS) {
+            game_over = true;
+            game_over_reason = "Movement limit reached.";
+        }
     }
 }
 
@@ -323,14 +474,18 @@ void write_state_file(
     MovementList& history,
     const std::string collected_items[],
     int collected_count,
-    int score
+    int score,
+    bool escaped,
+    bool game_over,
+    int alarm,
+    const std::string& game_over_reason
 ) {
     ItemBST items;
-    items.insert(game_items[0].id, game_items[0].row, game_items[0].col, game_items[0].value);
-    items.insert(game_items[1].id, game_items[1].row, game_items[1].col, game_items[1].value);
-    items.insert(game_items[2].id, game_items[2].row, game_items[2].col, game_items[2].value);
-
-    bool escaped = player_row == 7 && player_col == 7;
+    for (int index = 0; index < ITEM_COUNT; index++) {
+        if (!item_is_collected(collected_items, collected_count, game_items[index].id)) {
+            items.insert(game_items[index].id, game_items[index].row, game_items[index].col, game_items[index].value);
+        }
+    }
 
     std::ofstream out(path);
     if (!out) {
@@ -344,7 +499,22 @@ void write_state_file(
     out << "  \"player\": {\"row\": " << player_row << ", \"col\": " << player_col << "},\n";
     out << "  \"exit\": {\"row\": 7, \"col\": 7},\n";
     out << "  \"escaped\": " << (escaped ? "true" : "false") << ",\n";
+    out << "  \"game_over\": " << (game_over ? "true" : "false") << ",\n";
+    out << "  \"game_over_reason\": \"" << game_over_reason << "\",\n";
+    out << "  \"alarm\": " << alarm << ",\n";
+    out << "  \"max_alarm\": " << MAX_ALARM << ",\n";
+    out << "  \"max_movements\": " << MAX_MOVEMENTS << ",\n";
+
+    if (escaped) {
+        out << "  \"status\": \"Escaped\",\n";
+    } else if (game_over) {
+        out << "  \"status\": \"Caught\",\n";
+    } else {
+        out << "  \"status\": \"Playing\",\n";
+    }
+
     out << "  \"score\": " << score << ",\n";
+    out << "  \"all_items_count\": " << ITEM_COUNT << ",\n";
     out << "  \"collected_items\": ";
     write_collected_items(out, collected_items, collected_count);
     out << ",\n";
@@ -359,10 +529,30 @@ void write_state_file(
     out << "  \"guards\": [\n";
     out << "    {\"id\": \"guard_1\", \"row\": 4, \"col\": 4}\n";
     out << "  ],\n";
-    out << "  \"items\": [\n";
-    out << "    {\"id\": \"painting\", \"row\": 2, \"col\": 5, \"value\": 100},\n";
-    out << "    {\"id\": \"vase\", \"row\": 5, \"col\": 1, \"value\": 60},\n";
-    out << "    {\"id\": \"coin\", \"row\": 6, \"col\": 6, \"value\": 25}\n";
+    out << "  \"items\": [";
+
+    bool first_item = true;
+    for (int index = 0; index < ITEM_COUNT; index++) {
+        ItemData item = game_items[index];
+
+        if (!item_is_collected(collected_items, collected_count, item.id)) {
+            if (!first_item) {
+                out << ",";
+            }
+
+            out << "\n";
+            out << "    {\"id\": \"" << item.id
+                << "\", \"row\": " << item.row
+                << ", \"col\": " << item.col
+                << ", \"value\": " << item.value << "}";
+            first_item = false;
+        }
+    }
+
+    if (!first_item) {
+        out << "\n";
+    }
+
     out << "  ],\n";
     out << "  \"movement_history\": ";
     history.write_json_array(out);
@@ -382,12 +572,42 @@ int main() {
     int player_col = 0;
     int step = 0;
     int score = 0;
+    bool escaped = false;
+    bool game_over = false;
+    int alarm = 0;
+    std::string game_over_reason = "";
     int collected_count = 0;
     std::string collected_items[ITEM_COUNT];
     MovementList history;
 
-    apply_input(input_path, player_row, player_col, step, history, collected_items, collected_count, score);
-    write_state_file(state_path, input_found, player_row, player_col, history, collected_items, collected_count, score);
+    apply_input(
+        input_path,
+        player_row,
+        player_col,
+        step,
+        history,
+        collected_items,
+        collected_count,
+        score,
+        escaped,
+        game_over,
+        alarm,
+        game_over_reason
+    );
+    write_state_file(
+        state_path,
+        input_found,
+        player_row,
+        player_col,
+        history,
+        collected_items,
+        collected_count,
+        score,
+        escaped,
+        game_over,
+        alarm,
+        game_over_reason
+    );
 
     std::cout << "Museum Heist engine wrote " << state_path << "\n";
     return 0;
