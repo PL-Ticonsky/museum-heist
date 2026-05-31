@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-vscode.cpptools",
+    "ms-vscode.makefile-tools",
+    "eamodio.gitlens",
+    "usernamehw.errorlens"
+  ]
+}
