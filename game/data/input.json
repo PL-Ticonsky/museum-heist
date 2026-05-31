@@ -1,64 +1,18 @@
 {
-  "action": "move",
-  "direction": "right",
+  "action": "reset",
+  "direction": "",
   "difficulty": "Hard",
   "player": {
     "row": 0,
-    "col": 6
+    "col": 0
   },
-  "movement_step": 9,
-  "movement_history": [
-    {
-      "step": 0,
-      "row": 0,
-      "col": 0
-    },
-    {
-      "step": 1,
-      "row": 1,
-      "col": 0
-    },
-    {
-      "step": 2,
-      "row": 1,
-      "col": 1
-    },
-    {
-      "step": 3,
-      "row": 0,
-      "col": 1
-    },
-    {
-      "step": 4,
-      "row": 0,
-      "col": 2
-    },
-    {
-      "step": 5,
-      "row": 0,
-      "col": 3
-    },
-    {
-      "step": 6,
-      "row": 0,
-      "col": 4
-    },
-    {
-      "step": 7,
-      "row": 0,
-      "col": 5
-    },
-    {
-      "step": 8,
-      "row": 0,
-      "col": 6
-    }
-  ],
+  "movement_step": 0,
+  "movement_history": [],
   "collected_items": [],
   "score": 0,
   "escaped": false,
   "game_over": false,
   "game_over_reason": "",
   "alarm": 0,
-  "elapsed_seconds": 2
+  "elapsed_seconds": 0
 }
