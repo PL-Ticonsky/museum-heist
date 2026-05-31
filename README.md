@@ -7,7 +7,8 @@ standalone C++ engine. Python and C++ communicate through JSON files in
 ## Controls
 
 - Arrow keys or WASD: move the player
-- R: restart the game
+- R: restart the current difficulty
+- M: return to the main menu and difficulty selection
 - H: open the tutorial screen
 - B: return from the tutorial screen
 - 1: select Easy on the start screen
@@ -40,7 +41,8 @@ engine chooses a predefined hardcoded map and writes it to `state.json`.
 - If the alarm reaches the difficulty alarm limit, the player is caught.
 - If movement count reaches the difficulty movement limit before escaping, the player is caught.
 - If time reaches the difficulty time limit before escaping, the player is caught.
-- Press R at any time to restart the game.
+- Press R at any time to restart the current difficulty.
+- Press M to return to the main menu, reset the run, and choose a difficulty.
 
 ## Tutorial And Metrics
 

@@ -292,6 +292,8 @@ def draw_sidebar(screen, fonts, state, greedy_result, escape_route):
     draw_text(screen, small_font, "Press H for tutorial", x, y, MUTED_TEXT_COLOR)
     y += 24
     draw_text(screen, small_font, "Press R to restart", x, y, MUTED_TEXT_COLOR)
+    y += 24
+    draw_text(screen, small_font, "Main Menu: M", x, y, MUTED_TEXT_COLOR)
 
 
 def draw_board(screen, state, greedy_result, escape_route, pulse):
@@ -334,6 +336,7 @@ def draw_start_screen(screen, fonts, selected_difficulty):
         "Press 1 Easy, 2 Normal, 3 Hard",
         "Press Enter to start",
         "Press H for tutorial",
+        "Main Menu: M",
     ]
     draw_center_panel(screen, fonts, "Museum Heist", lines, SELECTED_ITEM_COLOR)
 
@@ -359,6 +362,8 @@ def draw_tutorial_screen(screen, fonts):
     draw_text(screen, small_font, "Move: WASD / Arrows", x, y, MUTED_TEXT_COLOR)
     y += 24
     draw_text(screen, small_font, "Restart: R", x, y, MUTED_TEXT_COLOR)
+    y += 24
+    draw_text(screen, small_font, "Main Menu: M", x, y, MUTED_TEXT_COLOR)
     y += 24
     draw_text(screen, small_font, "Start: Enter", x, y, MUTED_TEXT_COLOR)
 
@@ -404,6 +409,8 @@ def draw_tutorial_screen(screen, fonts):
     draw_text(screen, small_font, "Press B to go back", x, y, TEXT_COLOR)
     y += 26
     draw_text(screen, small_font, "Press Enter to start", x, y, TEXT_COLOR)
+    y += 26
+    draw_text(screen, small_font, "Main Menu: M", x, y, TEXT_COLOR)
 
 
 def draw_end_screen(screen, fonts, state):
@@ -433,12 +440,23 @@ def draw_end_screen(screen, fonts, state):
         f"Time: {format_time(elapsed)} / {format_time(time_limit)}",
         f"Rank: {state.get('rank', 'In Progress')}",
         "Press R to restart",
+        "Main Menu: M",
     ]
     draw_center_panel(screen, fonts, title, lines, banner)
 
 
 def update_results(state):
     return choose_greedy_item(state), find_escape_route(state)
+
+
+def return_to_main_menu(selected_difficulty):
+    bridge.write_reset_input(selected_difficulty)
+    bridge.run_engine()
+    state = bridge.load_state()
+    greedy_result, escape_route = update_results(state)
+    start_ticks = pygame.time.get_ticks()
+    last_tick_second = 0
+    return state, greedy_result, escape_route, start_ticks, last_tick_second
 
 
 def current_elapsed_seconds(start_ticks):
@@ -474,7 +492,12 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 direction = None
 
-                if screen_state == "start":
+                if event.key == pygame.K_m:
+                    selected_difficulty = state.get("difficulty", selected_difficulty)
+                    state, greedy_result, escape_route, start_ticks, last_tick_second = return_to_main_menu(selected_difficulty)
+                    screen_state = "start"
+                    previous_screen_state = "start"
+                elif screen_state == "start":
                     if event.key == pygame.K_1:
                         selected_difficulty = "Easy"
                         bridge.write_reset_input(selected_difficulty)

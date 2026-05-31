@@ -1,37 +1,47 @@
 {
   "input_found": true,
-  "difficulty": "Normal",
-  "grid": {"rows": 8, "cols": 8},
-  "player": {"row": 0, "col": 0},
-  "exit": {"row": 7, "col": 7},
+  "difficulty": "Hard",
+  "grid": {"rows": 10, "cols": 10},
+  "player": {"row": 0, "col": 6},
+  "exit": {"row": 9, "col": 9},
   "escaped": false,
-  "game_over": false,
-  "game_over_reason": "",
+  "game_over": true,
+  "game_over_reason": "Caught in vision zone",
   "alarm": 0,
-  "max_alarm": 3,
-  "max_movements": 35,
-  "elapsed_seconds": 5,
-  "time_limit": 60,
-  "status": "Playing",
-  "rank": "In Progress",
+  "max_alarm": 2,
+  "max_movements": 28,
+  "elapsed_seconds": 2,
+  "time_limit": 45,
+  "status": "Caught",
+  "rank": "Caught",
   "score": 0,
-  "all_items_count": 3,
+  "all_items_count": 4,
   "collected_items": [],
   "walls": [
     {"row": 1, "col": 3},
     {"row": 2, "col": 3},
-    {"row": 3, "col": 3}
+    {"row": 3, "col": 3},
+    {"row": 5, "col": 5},
+    {"row": 5, "col": 6},
+    {"row": 6, "col": 5},
+    {"row": 7, "col": 2},
+    {"row": 7, "col": 3}
 ],
   "cameras": [
-    {"id": "camera_1", "row": 0, "col": 6, "direction": "down", "range": 3}
+    {"id": "camera_1", "row": 0, "col": 7, "direction": "down", "range": 3},
+    {"id": "camera_2", "row": 8, "col": 8, "direction": "left", "range": 3}
 ],
   "guards": [
-    {"id": "guard_1", "row": 4, "col": 4, "vision_range": 2}
+    {"id": "guard_1", "row": 4, "col": 4, "vision_range": 2},
+    {"id": "guard_2", "row": 7, "col": 7, "vision_range": 1}
 ],
   "vision_zones": [
-    {"source": "camera_1", "type": "camera", "row": 1, "col": 6},
-    {"source": "camera_1", "type": "camera", "row": 2, "col": 6},
-    {"source": "camera_1", "type": "camera", "row": 3, "col": 6},
+    {"source": "camera_1", "type": "camera", "row": 1, "col": 7},
+    {"source": "camera_1", "type": "camera", "row": 2, "col": 7},
+    {"source": "camera_1", "type": "camera", "row": 3, "col": 7},
+    {"source": "camera_2", "type": "camera", "row": 8, "col": 7},
+    {"source": "camera_2", "type": "camera", "row": 8, "col": 6},
+    {"source": "camera_2", "type": "camera", "row": 8, "col": 5},
     {"source": "guard_1", "type": "guard", "row": 3, "col": 4},
     {"source": "guard_1", "type": "guard", "row": 2, "col": 4},
     {"source": "guard_1", "type": "guard", "row": 5, "col": 4},
@@ -39,13 +49,18 @@
     {"source": "guard_1", "type": "guard", "row": 4, "col": 3},
     {"source": "guard_1", "type": "guard", "row": 4, "col": 2},
     {"source": "guard_1", "type": "guard", "row": 4, "col": 5},
-    {"source": "guard_1", "type": "guard", "row": 4, "col": 6}
+    {"source": "guard_1", "type": "guard", "row": 4, "col": 6},
+    {"source": "guard_2", "type": "guard", "row": 6, "col": 7},
+    {"source": "guard_2", "type": "guard", "row": 8, "col": 7},
+    {"source": "guard_2", "type": "guard", "row": 7, "col": 6},
+    {"source": "guard_2", "type": "guard", "row": 7, "col": 8}
 ],
   "items": [
-    {"id": "painting", "row": 2, "col": 5, "value": 100},
-    {"id": "vase", "row": 5, "col": 1, "value": 60},
-    {"id": "coin", "row": 6, "col": 6, "value": 25}
+    {"id": "painting", "row": 2, "col": 6, "value": 100},
+    {"id": "vase", "row": 6, "col": 1, "value": 60},
+    {"id": "coin", "row": 8, "col": 3, "value": 25},
+    {"id": "mask", "row": 1, "col": 8, "value": 80}
 ],
-  "movement_history": [{"step":0,"row":0,"col":0}],
-  "items_sorted_by_value": [{"id":"coin","row":6,"col":6,"value":25},{"id":"vase","row":5,"col":1,"value":60},{"id":"painting","row":2,"col":5,"value":100}]
+  "movement_history": [{"step":0,"row":0,"col":0},{"step":1,"row":1,"col":0},{"step":2,"row":1,"col":1},{"step":3,"row":0,"col":1},{"step":4,"row":0,"col":2},{"step":5,"row":0,"col":3},{"step":6,"row":0,"col":4},{"step":7,"row":0,"col":5},{"step":8,"row":0,"col":6}],
+  "items_sorted_by_value": [{"id":"coin","row":8,"col":3,"value":25},{"id":"vase","row":6,"col":1,"value":60},{"id":"mask","row":1,"col":8,"value":80},{"id":"painting","row":2,"col":6,"value":100}]
 }
