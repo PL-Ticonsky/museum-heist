@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Museum Heist",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "${workspaceFolder}/game/ui/main.py"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build C++ Engine",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",
+        "${workspaceFolder}/engine/main.cpp",
+        "-o",
+        "${workspaceFolder}/engine/museum_engine"
+      ],
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    }
+  ]
+}

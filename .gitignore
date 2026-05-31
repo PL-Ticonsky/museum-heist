@@ -1,0 +1,23 @@
+.venv/
+
+__pycache__/
+*.pyc
+
+*.o
+*.out
+build/
+engine/museum_engine
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*~
+*.swp
+*.swo
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
