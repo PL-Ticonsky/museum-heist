@@ -8,8 +8,8 @@ Use this table to record manual or demonstrated test results.
 | T02 | Pygame launch | Start screen appears. |Start screen displayed correctly after launching the application. |PASS | <img width="1214" height="949" alt="image" src="https://github.com/user-attachments/assets/8beca623-be7a-42c5-b54b-2b0bd477fd83" />|
 | T03 | Movement | Player moves one valid cell. | Player moved one cell to the selected valid position. | PASS | <img src="https://github.com/user-attachments/assets/9f9b46b0-b81b-41c7-a14f-f358779b0ee3" width="300">|
 | T04 | Invalid movement outside grid | Player stays in place. | Player remained in the same position when attempting to leave the grid. | PASS | <img src="https://github.com/user-attachments/assets/3e4078a0-aa3d-4274-b6e8-823b05b177c2" width="300" />|
-| T05 | Invalid wall movement | Player stays in place and alarm increases. |  |  |  |
-| T06 | Item collection | Score increases and item id is collected. |  |  |  |
+| T05 | Invalid wall movement | Player stays in place and alarm increases. | Player remained in place and alarm counter increased by one. | PASS | <img width="300" src="https://github.com/user-attachments/assets/b7bc1596-8d98-460a-a4d0-64369e75770c" />|
+| T06 | Item collection | Score increases and item id is collected. | Score increased by the item value and item ID was added to collected items. | PASS | <img width="300" src="https://github.com/user-attachments/assets/bd23b815-8a58-407f-95ad-b0c5041f99a8" />|
 | T07 | Item disappearance | Collected item disappears from visible items. |  |  |  |
 | T08 | Vision zone game over | Status becomes `Caught`. |  |  |  |
 | T09 | Alarm game over | Alarm limit causes game over. |  |  |  |
