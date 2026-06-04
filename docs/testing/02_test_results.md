@@ -14,7 +14,7 @@ NOTE: GIF evidence may require a few seconds to load on GitHub. If an animation 
 | T06 | Item collection | Score increases and item id is collected. | Score increased by the item value and item ID was added to collected items. | PASS | <img width="300" src="https://github.com/user-attachments/assets/bd23b815-8a58-407f-95ad-b0c5041f99a8" />|
 | T07 | Item disappearance | Collected item disappears from visible items. | Collected item was removed from the visible items list. | PASS | <img width="300" src="https://github.com/user-attachments/assets/7f7a7b4b-150e-44e9-bd55-ac4d0de00f28" />|
 | T08 | Vision zone game over | Status becomes `Caught`. | Game status changed to Caught and game-over screen was displayed. | PASS | <img width="300" src="https://github.com/user-attachments/assets/a2622dfd-654a-454d-8299-96bfd47fe889" />|
-| T09 | Alarm game over | Alarm limit causes game over. |  |  |  |
+| T09 | Alarm game over | Alarm limit causes game over. | The game displays the game over screen for exceeding the alarm limit  | PASS |  |
 | T10 | Movement limit game over | Movement limit causes game over. |  |  |  |
 | T11 | Time limit game over | Time limit causes game over. |  |  |  |
 | T12 | Escape success | Status becomes `Escaped`. |  |  |  |
