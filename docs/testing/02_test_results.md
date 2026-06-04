@@ -18,8 +18,7 @@ NOTE: GIF evidence may require a few seconds to load on GitHub. If an animation 
   |
 | T10 | Movement limit game over | Movement limit causes game over. | The game displays the game over screen when the number of moves is exceeded.  | PASS | <img width="300" alt="Museum Heist 2026-06-03 22-35-30" src="https://github.com/user-attachments/assets/5b3028a8-c985-466d-b36f-f9b99f822695" />
  |
-| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  | <img width="1214" height="949"  alt="image" src="https://github.com/user-attachments/assets/1583e5c5-afdb-454c-9244-2353aa7ad5a4" />
- |
+| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  | |
 | T12 | Escape success | Status becomes `Escaped`. | The game displays the victory screen after achieving the escape. | PASS | <img width="300"alt="image" src="https://github.com/user-attachments/assets/62a7b119-982a-4ae2-ba8a-b7320e80c9da" />
   |
 | T13 | Restart | Current difficulty resets. | The game restarts when the R button is pressed.  | PASS  |  |
