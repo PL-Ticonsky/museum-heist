@@ -16,11 +16,11 @@ NOTE: GIF evidence may require a few seconds to load on GitHub. If an animation 
 | T08 | Vision zone game over | Status becomes `Caught`. | Game status changed to Caught and game-over screen was displayed. | PASS | <img width="300" src="https://github.com/user-attachments/assets/a2622dfd-654a-454d-8299-96bfd47fe889" />|
 | T09 | Alarm game over | Alarm limit causes game over. | The game displays the game over screen for exceeding the alarm limit  | PASS | <img width="300"  alt="Museum Heist 2026-06-03 22-12-53" src="https://github.com/user-attachments/assets/ebcbc380-adca-4c20-87f0-13f1dd480b4f" />
   |
-| T10 | Movement limit game over | Movement limit causes game over. | The game displays the game over screen when the number of moves is exceeded.  | PASS | <img width="600" height="448" alt="Museum Heist 2026-06-03 22-35-30" src="https://github.com/user-attachments/assets/5b3028a8-c985-466d-b36f-f9b99f822695" />
+| T10 | Movement limit game over | Movement limit causes game over. | The game displays the game over screen when the number of moves is exceeded.  | PASS | <img width="300" alt="Museum Heist 2026-06-03 22-35-30" src="https://github.com/user-attachments/assets/5b3028a8-c985-466d-b36f-f9b99f822695" />
  |
-| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  | <img width="1194" height="930" alt="image" src="https://github.com/user-attachments/assets/1583e5c5-afdb-454c-9244-2353aa7ad5a4" />
+| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  | <img width="300"  alt="image" src="https://github.com/user-attachments/assets/1583e5c5-afdb-454c-9244-2353aa7ad5a4" />
  |
-| T12 | Escape success | Status becomes `Escaped`. | The game displays the victory screen after achieving the escape. | PASS | <img width="1176" height="906" alt="image" src="https://github.com/user-attachments/assets/62a7b119-982a-4ae2-ba8a-b7320e80c9da" />
+| T12 | Escape success | Status becomes `Escaped`. | The game displays the victory screen after achieving the escape. | PASS | <img width="300"alt="image" src="https://github.com/user-attachments/assets/62a7b119-982a-4ae2-ba8a-b7320e80c9da" />
   |
 | T13 | Restart | Current difficulty resets. | The game restarts when the R button is pressed.  | PASS  |  |
 | T14 | Main menu return | UI returns to start screen. | The game returns to the menu when the key is pressed. | PASS |  |
