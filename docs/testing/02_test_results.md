@@ -15,11 +15,11 @@ NOTE: GIF evidence may require a few seconds to load on GitHub. If an animation 
 | T07 | Item disappearance | Collected item disappears from visible items. | Collected item was removed from the visible items list. | PASS | <img width="300" src="https://github.com/user-attachments/assets/7f7a7b4b-150e-44e9-bd55-ac4d0de00f28" />|
 | T08 | Vision zone game over | Status becomes `Caught`. | Game status changed to Caught and game-over screen was displayed. | PASS | <img width="300" src="https://github.com/user-attachments/assets/a2622dfd-654a-454d-8299-96bfd47fe889" />|
 | T09 | Alarm game over | Alarm limit causes game over. | The game displays the game over screen for exceeding the alarm limit  | PASS |  |
-| T10 | Movement limit game over | Movement limit causes game over. |  |  |  |
-| T11 | Time limit game over | Time limit causes game over. |  |  |  |
-| T12 | Escape success | Status becomes `Escaped`. |  |  |  |
-| T13 | Restart | Current difficulty resets. |  |  |  |
-| T14 | Main menu return | UI returns to start screen. |  |  |  |
-| T15 | Greedy output | Greedy function returns expected item/reason. |  |  |  |
-| T16 | Backtracking route | Route is returned or empty if blocked. |  |  |  |
-| T17 | JSON bridge | Input and state files update correctly. |  |  |  |
+| T10 | Movement limit game over | Movement limit causes game over. | The game displays the game over screen when the number of moves is exceeded.  | PASS |  |
+| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  |  |
+| T12 | Escape success | Status becomes `Escaped`. | The game displays the victory screen after achieving the escape. | PASS |  |
+| T13 | Restart | Current difficulty resets. | The game restarts when the R button is pressed.  | PASS  |  |
+| T14 | Main menu return | UI returns to start screen. | The game returns to the menu when the key is pressed. | PASS |  |
+| T15 | Greedy output | Greedy function returns expected item/reason. |  Greedy function returns expected item/reason.  | PASS  |  |
+| T16 | Backtracking route | Route is returned or empty if blocked. | Backtracking route | Route is returned or empty if blocked. | PASS |  |
+| T17 | JSON bridge | Input and state files update correctly. | Input and state files update correctly. | PASS |  |
