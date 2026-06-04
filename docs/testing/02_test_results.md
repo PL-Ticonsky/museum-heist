@@ -16,10 +16,11 @@ NOTE: GIF evidence may require a few seconds to load on GitHub. If an animation 
 | T08 | Vision zone game over | Status becomes `Caught`. | Game status changed to Caught and game-over screen was displayed. | PASS | <img width="300" src="https://github.com/user-attachments/assets/a2622dfd-654a-454d-8299-96bfd47fe889" />|
 | T09 | Alarm game over | Alarm limit causes game over. | The game displays the game over screen for exceeding the alarm limit  | PASS | <img width="300"  alt="Museum Heist 2026-06-03 22-12-53" src="https://github.com/user-attachments/assets/ebcbc380-adca-4c20-87f0-13f1dd480b4f" />|
 | T10 | Movement limit game over | Movement limit causes game over. | The game displays the game over screen when the number of moves is exceeded.  | PASS | <img width="300" alt="Museum Heist 2026-06-03 22-35-30" src="https://github.com/user-attachments/assets/5b3028a8-c985-466d-b36f-f9b99f822695" />|
-| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  | |
+| T11 | Time limit game over | Time limit causes game over. | The game displays the game over screen when the time limit is exceeded.  | PASS  | <img width="1205" height="916" alt="image" src="https://github.com/user-attachments/assets/6c2fe37f-05f6-4a39-845e-5890864d178e" />|
 | T12 | Escape success | Status becomes `Escaped`. | The game displays the victory screen after achieving the escape. | PASS | <img width="1189" height="922" alt="image" src="https://github.com/user-attachments/assets/bbc78151-d856-4156-adbf-cec5970d8eaa" />|
-| T13 | Restart | Current difficulty resets. | The game restarts when the R button is pressed.  | PASS  |  |
-| T14 | Main menu return | UI returns to start screen. | The game returns to the menu when the key is pressed. | PASS |  |
-| T15 | Greedy output | Greedy function returns expected item/reason. |  Greedy function returns expected item/reason.  | PASS  |  |
-| T16 | Backtracking route | Route is returned or empty if blocked. | Backtracking route | Route is returned or empty if blocked. | PASS |  |
-| T17 | JSON bridge | Input and state files update correctly. | Input and state files update correctly. | PASS |  |
+| T13 | Restart | Current difficulty resets. | The game restarts when the R button is pressed.  | PASS  | <img width="300" alt="Museum Heist 2026-06-03 23-16-21" src="https://github.com/user-attachments/assets/8ed3630e-d423-463b-8701-e06996fe8bea" />|
+| T14 | Main menu return | UI returns to start screen. | The game returns to the menu when the key is pressed. | PASS | <img width="300"  alt="Museum Heist 2026-06-03 23-18-17" src="https://github.com/user-attachments/assets/a2a3db29-ef96-4557-8bde-0fd2e19af9c9" />
+  |
+| T15 | Greedy output | Greedy function returns expected item/reason. |  Greedy function returns expected item/reason.  | PASS  | <img width="717" height="466" alt="image" src="https://github.com/user-attachments/assets/da9c0836-b10c-401a-b74e-d2a0ee4a0c82" />|
+| T16 | Backtracking route | Route is returned or empty if blocked. | Backtracking route | Route is returned or empty if blocked. | PASS | <img width="1196" height="937" alt="image" src="https://github.com/user-attachments/assets/2b9e9633-7169-4b6d-a8ba-e033ec6868f7" />|
+| T17 | JSON bridge | Input and state files update correctly. | Input and state files update correctly. | PASS | <img width="455" height="876" alt="image" src="https://github.com/user-attachments/assets/f65275d8-a502-454c-8c1c-98248e9f9ff3" />|
