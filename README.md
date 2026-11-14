@@ -1,4 +1,12 @@
-# Museum Heist
+<h1 align="center">Museum Heist</h1>
+
+<p align="center">Videojuego académico en Pygame con un motor en C++ y comunicación mediante archivos JSON.</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Proyecto-Pygame%20%C2%B7%20C%2B%2B-573c56" alt="Pygame · C++">
+</p>
+
+[Guía de documentación](docs/README_DOCS.md) · [Póster académico](docs/Museum_Heist_Academic_Poster.pdf) · [Informe técnico](docs/Museum_Heist_Technical_Report_11.pdf)
 
 Museum Heist is a Computer Science I project using Python, Pygame, and a
 standalone C++ engine. Python and C++ communicate through JSON files in
