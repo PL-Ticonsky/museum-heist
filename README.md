@@ -3,6 +3,10 @@
 <p align="center">Videojuego académico en Pygame con un motor en C++ y comunicación mediante archivos JSON.</p>
 
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-184b3a" alt="Licencia MIT"></a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Proyecto-Pygame%20%C2%B7%20C%2B%2B-573c56" alt="Pygame · C++">
 </p>
 
