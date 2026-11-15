@@ -26,26 +26,26 @@ PANEL_LEFT = BOARD_LEFT + BOARD_SIZE + MARGIN
 PANEL_TOP = MARGIN
 PANEL_HEIGHT = WINDOW_HEIGHT - MARGIN * 2
 
-BACKGROUND_COLOR = (18, 20, 26)
-PANEL_COLOR = (34, 37, 46)
-PANEL_BORDER_COLOR = (82, 86, 102)
-FLOOR_COLOR = (218, 205, 176)
-FLOOR_ALT_COLOR = (205, 192, 166)
-GRID_COLOR = (85, 78, 68)
-WALL_COLOR = (54, 55, 60)
-VISION_COLOR = (230, 92, 54, 92)
-ROUTE_COLOR = (93, 190, 210)
-PLAYER_COLOR = (55, 130, 230)
-EXIT_COLOR = (75, 180, 98)
-GUARD_COLOR = (210, 70, 76)
-CAMERA_COLOR = (235, 190, 55)
-ITEM_COLOR = (160, 92, 220)
-SELECTED_ITEM_COLOR = (255, 220, 90)
+BACKGROUND_COLOR = (16, 21, 38)
+PANEL_COLOR = (27, 35, 57)
+PANEL_BORDER_COLOR = (79, 92, 123)
+FLOOR_COLOR = (232, 224, 207)
+FLOOR_ALT_COLOR = (217, 207, 189)
+GRID_COLOR = (160, 147, 134)
+WALL_COLOR = (52, 61, 85)
+VISION_COLOR = (181, 53, 42, 95)
+ROUTE_COLOR = (64, 76, 151)
+PLAYER_COLOR = (39, 54, 112)
+EXIT_COLOR = (49, 79, 140)
+GUARD_COLOR = (141, 44, 43)
+CAMERA_COLOR = (235, 163, 111)
+ITEM_COLOR = (113, 68, 103)
+SELECTED_ITEM_COLOR = (227, 164, 127)
 TEXT_COLOR = (238, 236, 228)
-MUTED_TEXT_COLOR = (176, 174, 166)
+MUTED_TEXT_COLOR = (183, 190, 209)
 ALARM_COLOR = (255, 178, 82)
 DANGER_COLOR = (215, 68, 70)
-SUCCESS_COLOR = (82, 185, 106)
+SUCCESS_COLOR = (141, 175, 245)
 
 
 def tile_rect(row, col, padding=0):
@@ -92,7 +92,7 @@ def draw_wrapped_text(screen, font, text, x, y, color=TEXT_COLOR, line_height=24
 
 def draw_grid(screen, rows, cols):
     board_rect = pygame.Rect(BOARD_LEFT, BOARD_TOP, cols * TILE_SIZE, rows * TILE_SIZE)
-    pygame.draw.rect(screen, GRID_COLOR, board_rect, 3)
+    pygame.draw.rect(screen, PANEL_BORDER_COLOR, board_rect.inflate(8, 8), 2)
 
     for row in range(rows):
         for col in range(cols):
@@ -108,6 +108,11 @@ def draw_grid(screen, rows, cols):
 def draw_vision_zones(screen, state):
     overlay = pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA)
     overlay.fill(VISION_COLOR)
+    for offset in range(0, TILE_SIZE * 2, 9):
+        pygame.draw.line(
+            overlay, (137, 33, 28, 115),
+            (offset, 0), (offset - TILE_SIZE, TILE_SIZE), 1,
+        )
 
     for zone in state.get("vision_zones", []):
         rect = tile_rect(zone["row"], zone["col"])
@@ -117,49 +122,56 @@ def draw_vision_zones(screen, state):
 def draw_route(screen, escape_route):
     for position in escape_route:
         center = tile_center(position["row"], position["col"])
-        pygame.draw.circle(screen, ROUTE_COLOR, center, 5)
+        pygame.draw.circle(screen, (244, 235, 213), center, 6)
+        pygame.draw.circle(screen, ROUTE_COLOR, center, 4)
 
 
 def draw_wall(screen, row, col):
-    rect = tile_rect(row, col, 5)
+    rect = tile_rect(row, col)
     pygame.draw.rect(screen, WALL_COLOR, rect)
-    pygame.draw.rect(screen, (26, 27, 30), rect, 2)
+    pygame.draw.line(screen, (111, 124, 151), rect.topleft, rect.topright, 2)
+    pygame.draw.line(screen, (31, 37, 55), rect.bottomleft, rect.bottomright, 3)
 
 
 def draw_player(screen, row, col):
-    pygame.draw.circle(screen, PLAYER_COLOR, tile_center(row, col), 16)
+    x, y = tile_center(row, col)
+    pygame.draw.circle(screen, PLAYER_COLOR, (x, y), 17)
+    pygame.draw.circle(screen, (244, 235, 213), (x, y), 17, 2)
+    pygame.draw.circle(screen, (244, 235, 213), (x, y - 5), 4)
+    pygame.draw.arc(screen, (244, 235, 213), (x - 8, y, 16, 12), 0, 3.14, 3)
 
 
 def draw_exit(screen, row, col):
-    rect = tile_rect(row, col, 14)
-    pygame.draw.rect(screen, EXIT_COLOR, rect)
-    pygame.draw.rect(screen, (32, 95, 52), rect, 3)
+    x, y = tile_center(row, col)
+    rect = pygame.Rect(x - 18, y - 15, 36, 30)
+    pygame.draw.rect(screen, EXIT_COLOR, rect, border_radius=4)
+    pygame.draw.line(screen, TEXT_COLOR, (x - 9, y), (x + 9, y), 2)
+    pygame.draw.lines(screen, TEXT_COLOR, False, [(x + 3, y - 6), (x + 9, y), (x + 3, y + 6)], 2)
 
 
 def draw_guard(screen, row, col):
-    pygame.draw.circle(screen, GUARD_COLOR, tile_center(row, col), 16)
+    x, y = tile_center(row, col)
+    shield = [(x - 13, y - 13), (x + 13, y - 13), (x + 11, y + 6), (x, y + 15), (x - 11, y + 6)]
+    pygame.draw.polygon(screen, GUARD_COLOR, shield)
+    pygame.draw.polygon(screen, (249, 222, 194), shield, 2)
+    pygame.draw.line(screen, TEXT_COLOR, (x, y - 7), (x, y + 2), 2)
+    pygame.draw.circle(screen, TEXT_COLOR, (x, y + 6), 1)
 
 
 def draw_camera(screen, row, col):
-    center_x, center_y = tile_center(row, col)
-    points = [
-        (center_x, center_y - 17),
-        (center_x - 17, center_y + 14),
-        (center_x + 17, center_y + 14),
-    ]
-    pygame.draw.polygon(screen, CAMERA_COLOR, points)
-    pygame.draw.polygon(screen, (98, 76, 18), points, 2)
+    x, y = tile_center(row, col)
+    pygame.draw.polygon(screen, (113, 62, 42), [(x + 7, y - 4), (x + 16, y - 9), (x + 16, y + 9), (x + 7, y + 4)])
+    body = pygame.Rect(x - 15, y - 9, 24, 18)
+    pygame.draw.rect(screen, (113, 62, 42), body, border_radius=3)
+    pygame.draw.circle(screen, CAMERA_COLOR, (x - 7, y), 3)
 
 
 def draw_item(screen, item):
-    center_x, center_y = tile_center(item["row"], item["col"])
-    points = [
-        (center_x, center_y - 16),
-        (center_x + 15, center_y),
-        (center_x, center_y + 16),
-        (center_x - 15, center_y),
-    ]
-    pygame.draw.polygon(screen, ITEM_COLOR, points)
+    x, y = tile_center(item["row"], item["col"])
+    pygame.draw.rect(screen, (134, 83, 58), (x - 15, y + 8, 30, 5), border_radius=2)
+    jewel = [(x, y - 15), (x + 11, y - 5), (x, y + 7), (x - 11, y - 5)]
+    pygame.draw.polygon(screen, ITEM_COLOR, jewel)
+    pygame.draw.polygon(screen, (247, 221, 191), jewel, 1)
 
 
 def draw_selected_item(screen, selected_item, pulse):
@@ -330,15 +342,31 @@ def draw_center_panel(screen, fonts, title, lines, banner_color):
 
 def draw_start_screen(screen, fonts, selected_difficulty):
     screen.fill(BACKGROUND_COLOR)
-    lines = [
-        "Escape, collect items, avoid vision zones.",
-        f"Selected difficulty: {selected_difficulty}",
-        "Press 1 Easy, 2 Normal, 3 Hard",
-        "Press Enter to start",
-        "Press H for tutorial",
-        "Main Menu: M",
-    ]
-    draw_center_panel(screen, fonts, "Museum Heist", lines, SELECTED_ITEM_COLOR)
+    title_font, font, small_font = fonts
+    center_x = WINDOW_WIDTH // 2
+
+    def centered(text, face, y, color=TEXT_COLOR):
+        label = face.render(text, True, color)
+        screen.blit(label, label.get_rect(midtop=(center_x, y)))
+
+    frame = pygame.Rect(82, 76, WINDOW_WIDTH - 164, WINDOW_HEIGHT - 152)
+    pygame.draw.rect(screen, PANEL_COLOR, frame)
+    pygame.draw.rect(screen, PANEL_BORDER_COLOR, frame, 1)
+    pygame.draw.line(screen, SELECTED_ITEM_COLOR, (center_x - 27, 132), (center_x + 27, 132), 2)
+    centered("Museum Heist", title_font, 158)
+    centered("Collect valuables and find a way out of the museum.", font, 218, MUTED_TEXT_COLOR)
+    centered("Choose your difficulty", small_font, 294)
+
+    for index, difficulty in enumerate(("Easy", "Normal", "Hard")):
+        active = difficulty == selected_difficulty
+        card = pygame.Rect(center_x - 252 + index * 172, 330, 160, 76)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, card)
+        pygame.draw.rect(screen, SELECTED_ITEM_COLOR if active else PANEL_BORDER_COLOR, card, 2 if active else 1)
+        label = font.render(f"{index + 1}  {difficulty}", True, SELECTED_ITEM_COLOR if active else TEXT_COLOR)
+        screen.blit(label, label.get_rect(center=card.center))
+
+    centered("ENTER   Start heist", font, 468, SELECTED_ITEM_COLOR)
+    centered("H   Tutorial", small_font, 515, MUTED_TEXT_COLOR)
 
 
 def draw_tutorial_screen(screen, fonts):

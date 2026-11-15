@@ -1,76 +1,54 @@
-<h1 align="center">Museum Heist</h1>
+# Museum Heist
 
-<p align="center">Videojuego académico en Pygame con un motor en C++ y comunicación mediante archivos JSON.</p>
+Un juego de sigilo de escritorio. Recorre las salas del museo, recoge piezas valiosas y encuentra la salida antes de activar la alarma. Cada movimiento cuenta: los guardias y las cámaras vigilan el tablero, y las paredes bloquean su visión.
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-184b3a" alt="Licencia MIT"></a>
-</p>
+![Python](https://img.shields.io/badge/Python-Interfaz-24345c?logo=python&logoColor=white)
+![Pygame](https://img.shields.io/badge/Pygame-Juego%20de%20escritorio-24345c)
+![C++17](https://img.shields.io/badge/C%2B%2B17-Motor-96573e?logo=cplusplus&logoColor=white)
+[![Licencia MIT](https://img.shields.io/badge/Licencia-MIT-96573e)](LICENSE)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Proyecto-Pygame%20%C2%B7%20C%2B%2B-573c56" alt="Pygame · C++">
-</p>
+[Cómo jugar](#cómo-jugar) · [Inicio local](#inicio-local) · [Documentación](docs/README_DOCS.md) · [Póster académico](docs/Museum_Heist_Academic_Poster.pdf)
 
-[Guía de documentación](docs/README_DOCS.md) · [Póster académico](docs/Museum_Heist_Academic_Poster.pdf) · [Informe técnico](docs/Museum_Heist_Technical_Report_11.pdf)
+## Vista previa
 
-Museum Heist is a Computer Science I project using Python, Pygame, and a
-standalone C++ engine. Python and C++ communicate through JSON files in
-`game/data/`.
+La ruta sugerida aparece como puntos índigo y las zonas vigiladas se marcan con un tramado rojo. El panel lateral muestra el botín, el tiempo y el nivel de alarma.
 
-## Controls
+<a href="docs/media/gameplay.png"><img src="docs/media/gameplay.png" width="680" alt="Partida de Museum Heist con el tablero del museo, zonas de vigilancia y panel de estado"></a>
 
-- Arrow keys or WASD: move the player
-- R: restart the current difficulty
-- M: return to the main menu and difficulty selection
-- H: open the tutorial screen
-- B: return from the tutorial screen
-- 1: select Easy on the start screen
-- 2: select Normal on the start screen
-- 3: select Hard on the start screen
-- Enter: start the game
+## Cómo jugar
 
-Collected items disappear from the map. Reaching the exit ends the game and
-shows the final score, collected item count, movement count, time, and rank.
+| Teclas | Acción |
+| --- | --- |
+| **1**, **2**, **3** | Elegir dificultad |
+| **Enter** | Iniciar partida |
+| **WASD** o flechas | Mover al jugador |
+| **H** / **B** | Abrir el tutorial / regresar |
+| **R** | Reiniciar la partida |
+| **M** | Volver al menú |
 
-## Difficulty
+Entrar en una zona vigilada termina la partida. Chocar con una pared aumenta la alarma. Recoge piezas para mejorar tu puntuación y llega a la salida antes de agotar el tiempo o los movimientos.
 
-- Easy: 8x8 grid, alarm limit 4, movement limit 45, time limit 90 seconds.
-- Normal: 8x8 grid, alarm limit 3, movement limit 35, time limit 60 seconds.
-- Hard: 10x10 grid, alarm limit 2, movement limit 28, time limit 45 seconds.
+| Dificultad | Tablero | Límite de alarma | Movimientos | Tiempo |
+| --- | --- | ---: | ---: | ---: |
+| Fácil | 8 × 8 | 4 | 45 | 90 s |
+| Normal | 8 × 8 | 3 | 35 | 60 s |
+| Difícil | 10 × 10 | 2 | 28 | 45 s |
 
-The selected difficulty is sent to the C++ engine through `input.json`. The
-engine chooses a predefined hardcoded map and writes it to `state.json`.
+## Inicio local
 
-## Stealth Rules
+Necesitas Python con Pygame y `g++` con soporte para C++17 en el PATH. Ejecuta desde la raíz del repositorio:
 
-- Trying to move into a wall keeps the player in place and raises the alarm by 1.
-- Moving into a camera or guard cell causes game over immediately.
-- Cameras see in one direction for a limited range.
-- Guards see up, down, left, and right for a limited range.
-- Walls block camera and guard vision.
-- Entering a camera or guard vision zone causes game over immediately.
-- Ending a move next to a guard raises the alarm by 1.
-- Collecting an item near a guard raises the alarm by 1.
-- If the alarm reaches the difficulty alarm limit, the player is caught.
-- If movement count reaches the difficulty movement limit before escaping, the player is caught.
-- If time reaches the difficulty time limit before escaping, the player is caught.
-- Press R at any time to restart the current difficulty.
-- Press M to return to the main menu, reset the run, and choose a difficulty.
+```bash
+python -m pip install -r requirements.txt
+python game/ui/main.py
+```
 
-## Tutorial And Metrics
+El juego compila el motor al arrancar y abre una ventana de escritorio.
 
-Press H to open the tutorial screen. It explains the objective, controls,
-objects, vision zones, the greedy selected item, and the backtracking route.
+## Cómo está hecho
 
-During play, the sidebar shows compact metrics: status, difficulty, score,
-items collected, moves used out of max movements, elapsed time out of the time
-limit, alarm, selected item, and route length.
+- **Pygame** dibuja el tablero, el menú y el panel de partida.
+- **C++** resuelve movimientos, vigilancia, alarmas y puntuación. La interfaz y el motor intercambian el estado mediante JSON.
+- **Python** usa un algoritmo voraz para sugerir una pieza y *backtracking* para buscar una ruta de escape.
 
-The final screen shows score, collected items, movements, elapsed time, and
-rank.
-
-## Ranking
-
-- A: escaped with high score, low movement count, low time, and low alarm.
-- B: escaped with acceptable score, movement count, and time.
-- C: escaped with low score or many movements.
-- Caught: the player did not escape.
+Consulta el [informe técnico](docs/Museum_Heist_Technical_Report_11.pdf) para conocer la arquitectura y las decisiones del proyecto académico.
