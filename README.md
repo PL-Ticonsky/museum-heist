@@ -15,6 +15,17 @@ La ruta sugerida aparece como puntos índigo y las zonas vigiladas se marcan con
 
 <a href="docs/media/gameplay.png"><img src="docs/media/gameplay.png" width="680" alt="Partida de Museum Heist con el tablero del museo, zonas de vigilancia y panel de estado"></a>
 
+## Cómo se resuelve un turno
+
+La interfaz y el motor intercambian archivos JSON. Los algoritmos de Python usan el estado resultante para sugerir una pieza y una ruta.
+
+```mermaid
+flowchart LR
+    A["Pygame · movimiento del jugador"] -->|input.json| B["Motor C++"]
+    B -->|state.json| C["Tablero, alarma y puntuación"]
+    C --> D["Python · pieza sugerida y ruta de escape"]
+```
+
 ## Cómo jugar
 
 | Teclas | Acción |
